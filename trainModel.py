@@ -7,7 +7,6 @@ from keras.models import load_model
 np.set_printoptions(linewidth = 500)
 
 #Prompt user to specify the model they want to use
-#sys.path.append('models')
 #get raw model code
 models = os.listdir("modelCode")
 models = [i.replace(".py","") for i in models if not ".pyc" in i and i[0] != '.']
