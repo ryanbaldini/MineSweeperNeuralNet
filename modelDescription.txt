@@ -1,0 +1,45 @@
+#Model 1
+in1 = Input(shape=inputShape)
+in2 = Input(shape=(1,dim,dim))
+conv = Conv2D(16, (5,5), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(in1)
+conv = Conv2D(8, (3,3), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(conv)
+conv = Conv2D(1, (1,1), padding='same', data_format = 'channels_first', activation = 'sigmoid', use_bias = True)(conv)
+out = Multiply()([conv,in2])
+model = Model(inputs=[in1,in2], outputs=out)
+#model.compile(loss='binary_crossentropy',optimizer=SGD(lr=0.01*dim*dim, momentum = 0.5, nesterov=True))
+model.compile(loss='binary_crossentropy',optimizer='adadelta')
+
+
+#Model 2
+in1 = Input(shape=inputShape)
+in2 = Input(shape=(1,dim,dim))
+conv = Conv2D(16, (5,5), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(in1)
+conv = Conv2D(16, (3,3), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(conv)
+conv = Conv2D(1, (1,1), padding='same', data_format = 'channels_first', activation = 'sigmoid', use_bias = True)(conv)
+out = Multiply()([conv,in2])
+model = Model(inputs=[in1,in2], outputs=out)
+#model.compile(loss='binary_crossentropy',optimizer=SGD(lr=0.01*dim*dim, momentum = 0.5, nesterov=True))
+model.compile(loss='binary_crossentropy',optimizer='adadelta')
+
+#Model 3
+in1 = Input(shape=inputShape)
+in2 = Input(shape=(1,dim,dim))
+conv = Conv2D(16, (3,3), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(in1)
+conv = Conv2D(16, (3,3), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(conv)
+conv = Conv2D(1, (1,1), padding='same', data_format = 'channels_first', activation = 'sigmoid', use_bias = True)(conv)
+out = Multiply()([conv,in2])
+model = Model(inputs=[in1,in2], outputs=out)
+#model.compile(loss='binary_crossentropy',optimizer=SGD(lr=0.01*dim*dim, momentum = 0.5, nesterov=True))
+model.compile(loss='binary_crossentropy',optimizer='adadelta')
+
+#Model 4
+in1 = Input(shape=inputShape)
+in2 = Input(shape=(1,dim,dim))
+conv = Conv2D(16, (3,3), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(in1)
+conv = Conv2D(16, (3,3), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(conv)
+conv = Conv2D(16, (3,3), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(conv)
+conv = Conv2D(1, (1,1), padding='same', data_format = 'channels_first', activation = 'sigmoid', use_bias = True)(conv)
+out = Multiply()([conv,in2])
+model = Model(inputs=[in1,in2], outputs=out)
+#model.compile(loss='binary_crossentropy',optimizer=SGD(lr=0.01*dim*dim, momentum = 0.5, nesterov=True))
+model.compile(loss='binary_crossentropy',optimizer='adadelta')
