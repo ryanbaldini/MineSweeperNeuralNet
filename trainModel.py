@@ -1,10 +1,9 @@
 import numpy as np
 from MineSweeperLearner import MineSweeperLearner
 import os
+import subprocess
 import imp
 from keras.models import load_model
-
-np.set_printoptions(linewidth = 500)
 
 #Prompt user to specify the model they want to use
 #get raw model code
@@ -20,23 +19,19 @@ if toDo == 1:
         prompt += str(i+1) +  ". " + models[i] + '\n'
     modelChoice = input(prompt)
     modelChoice = models[modelChoice-1]
-    modelSource = imp.load_source(modelChoice, "modelCode/" + modelChoice + ".py")
-    model = modelSource.model
-    dim = modelSource.dim
 elif toDo == 2:
     prompt = "Choose which model to continue training (from 'trainedModels' folder): \n"
     for i in range(len(preTrainedModels)):
         prompt += str(i+1) +  ". " + preTrainedModels[i] + '\n'
     modelChoice = input(prompt)
     modelChoice = preTrainedModels[modelChoice-1]
-    model = load_model("trainedModels/" + modelChoice + ".h5")
-    dim = model.get_config()['layers'][0]['config']['batch_input_shape'][2] #pulled from keras config
 
-#now train
-learner = MineSweeperLearner(model, dim)
+#get batch info
 gamesPerBatch = input("How many games per batch? ")
 nBatches = input("How many batches? ")
-learner.learnMineSweeper(gamesPerBatch, nBatches, verbose=True)
 
-#save model
-learner.model.save("trainedModels/" + modelChoice + ".h5")
+#launch background process
+if toDo == 1:
+    subprocess.Popen(["nohup", "python", "trainModelBackground.py", "-otrainNew", "-m" + modelChoice,  "-b " + str(nBatches), "-g " + str(gamesPerBatch)])
+elif toDo == 2:
+    subprocess.Popen(["nohup", "python", "trainModelBackground.py", "-ocontinueTraining", "-m" + modelChoice, "-b " + str(nBatches),"-g " + str(gamesPerBatch)])
