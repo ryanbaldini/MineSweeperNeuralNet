@@ -73,7 +73,7 @@ class MineSweeperLearner:
             print "Beginning play"
             while not game.gameOver:
                 if np.sum(np.isnan(game.state)) < self.totalCells:
-                    print "Last selection: (" + str(selectedX) + "," + str(selectedY) + ")"
+                    print "Last selection: (" + str(selectedX+1) + "," + str(selectedY+1) + ")"
                 print "Game board:"
                 print game.state
                 Xnow = self.getPredictorsFromGameState(game.state)
