@@ -1,9 +1,4 @@
-import numpy as np
-from MineSweeperLearner import MineSweeperLearner
 import os
-import subprocess
-import imp
-from keras.models import load_model
 
 #Prompt user to specify the model they want to use
 #get raw model code
@@ -32,6 +27,8 @@ nBatches = input("How many batches? ")
 
 #launch background process
 if toDo == 1:
-    subprocess.Popen(["nohup", "python", "trainModelBackground.py", "-otrainNew", "-m" + modelChoice,  "-b " + str(nBatches), "-g " + str(gamesPerBatch)])
+    os.system("nohup python trainModelBackground.py -o trainNew -m " + modelChoice + " -b " + str(nBatches) + " -g " + str(gamesPerBatch) + " >log/" + modelChoice + ".out &")
 elif toDo == 2:
-    subprocess.Popen(["nohup", "python", "trainModelBackground.py", "-ocontinueTraining", "-m" + modelChoice, "-b " + str(nBatches),"-g " + str(gamesPerBatch)])
+    os.system("nohup python trainModelBackground.py -o continueTraining -m " + modelChoice + " -b " + str(nBatches) + " -g " + str(gamesPerBatch) + " >log/" + modelChoice + ".out &")
+
+print "Model training output is being written to log/" + modelChoice + ".out"

@@ -4,7 +4,7 @@ from keras.layers.convolutional import Conv2D
 from keras.layers.merge import Multiply
 
 dim = 10
-inputShape = (10,dim,dim)   #10 channels, each 10x10
+inputShape = (11,dim,dim)   #11 channels, each 10x10
 
 in1 = Input(shape=inputShape)
 in2 = Input(shape=(1,dim,dim))

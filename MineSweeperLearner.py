@@ -10,17 +10,19 @@ class MineSweeperLearner:
 
     # ultimately want to put this in the model so each can extract its own shit
     def getPredictorsFromGameState(self, state):
-        out = np.zeros((1, 10, self.dim, self.dim))
-        # channel 0: cell is still available
+        out = np.zeros((1, 11, self.dim, self.dim))
+        # channel 0: cell is still available to be clicked on
         out[0][0] = np.where(np.isnan(state), 0, 1)
-        # the numeric channels: categories from 0 to 8
+        # channel 1: cell is on game board (useful for detecting edges when conv does 0 padding)
+        out[0][1] = np.ones((self.dim, self.dim))
+        # the numeric channels: one layer each for 0 to 8 neighbors; one-hot encoding
         for i in range(0, 9):
-            out[0][i + 1] = np.where(state == i, 1, 0)
+            out[0][i + 2] = np.where(state == i, 1, 0)
         return out
 
     def learnMineSweeper(self, gamesPerBatch, nBatches, verbose=True):
         for i in range(nBatches):
-            X = np.zeros((1, 10, self.dim, self.dim))  # 10 channels: 1 for each number, 1 for if has been revealed
+            X = np.zeros((1, 11, self.dim, self.dim))  # 11 channels: 1 for if has been revealed, 1 for is-on-board, 1 for each number
             X2 = np.zeros((1, 1, self.dim, self.dim))
             y = np.zeros((1, 1, self.dim, self.dim))
             meanCellsRevealed = 0
