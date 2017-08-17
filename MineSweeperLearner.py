@@ -89,7 +89,7 @@ class MineSweeperLearner:
                 time.sleep(0.5)
                 os.system("clear")
             if np.sum(np.isnan(game.state)) < self.totalCells:
-                print "Last selection: (" + str(selectedX) + "," + str(selectedY) + ")"
+                print "Last selection: (" + str(selectedX+1) + "," + str(selectedY+1) + ")"
             print "Game board:"
             print game.state
             if game.victory:
