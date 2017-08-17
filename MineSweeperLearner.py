@@ -1,6 +1,7 @@
 import numpy as np
 from MineSweeper import MineSweeper
 import time
+import os
 
 class MineSweeperLearner:
     def __init__(self, model, dim):
@@ -62,3 +63,41 @@ class MineSweeperLearner:
             y = np.delete(y, 0, 0)
             # print y
             self.model.fit([X, X2], y, epochs=1)
+
+    def watchMePlay(self):
+        np.set_printoptions(linewidth=200)
+        play = True
+        while play:
+            game = MineSweeper(self.dim, int(0.2 * self.totalCells))
+            os.system("clear")
+            print "Beginning play"
+            while not game.gameOver:
+                if np.sum(np.isnan(game.state)) < self.totalCells:
+                    print "Last selection: (" + str(selectedX) + "," + str(selectedY) + ")"
+                print "Game board:"
+                print game.state
+                Xnow = self.getPredictorsFromGameState(game.state)
+                X2now = np.array([[np.where(Xnow[0][0] == 0, 1, 0)]])
+                # make probability predictions
+                out = self.model.predict([Xnow, X2now])
+                # choose best remaining cell
+                orderedProbs = np.argsort(out[0][0] + Xnow[0][0], axis=None)  # add Xnow[0] so that already selected cells aren't chosen
+                selected = orderedProbs[0]
+                selectedX = int(selected / self.dim)
+                selectedY = selected % self.dim
+                game.selectCell((selectedX, selectedY))
+                time.sleep(0.5)
+                os.system("clear")
+            if np.sum(np.isnan(game.state)) < self.totalCells:
+                print "Last selection: (" + str(selectedX) + "," + str(selectedY) + ")"
+            print "Game board:"
+            print game.state
+            if game.victory:
+                print "Victory!"
+            else:
+                print "Game Over"
+            play = raw_input("Watch me play again? (y/n): ")
+            if play == "y":
+                play = True
+            else:
+                play = False
