@@ -1,4 +1,6 @@
 # MineSweeperNeuralNet
-teaching a robot to play mine sweeper
+Teaching a robot to play mine sweeper
 
-Run watchMePlay.py and choose model4. Victory rate is >20% after 2 million training games. Stay tuned.
+Run watchMePlay.py and choose model4. Victory rate is >35% on a 10x10 board with 20 mines (hard). Stay tuned.
+
+To play the game yourself, run playMineSweeper.py. Be prepared for verbal abuse.

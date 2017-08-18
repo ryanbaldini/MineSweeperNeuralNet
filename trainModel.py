@@ -1,12 +1,15 @@
 import os
+import numpy as np
 
 #Prompt user to specify the model they want to use
 #get raw model code
 models = os.listdir("modelCode")
 models = [i.replace(".py","") for i in models if not ".pyc" in i and i[0] != '.']
+models = np.sort(models)
 #and pre-trained models
 preTrainedModels = os.listdir("trainedModels")
 preTrainedModels = [i.replace(".h5","") for i in preTrainedModels if i[0] != '.']
+preTrainedModels = np.sort(preTrainedModels)
 toDo = input("What do you want to do? \n1. Train a new model from scratch \n2. Keep training a pre-trained model\n")
 if toDo == 1:
     prompt = "Choose which model to train (from 'modelCode' folder): \n"

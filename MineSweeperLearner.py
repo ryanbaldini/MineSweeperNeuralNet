@@ -31,9 +31,8 @@ class MineSweeperLearner:
             for j in range(gamesPerBatch):
                 # initiate game
                 game = MineSweeper(self.dim, int(0.2 * self.totalCells))
-                #pick top left corner on first selection
-                #remember: mines are not placed until after first selection
-                game.selectCell((0, 0))
+                #pick middle on first selection. better than corner.
+                game.selectCell((self.dim/2, self.dim/2))
                 while not game.gameOver:
                     # get data input from game state
                     Xnow = self.getPredictorsFromGameState(game.state)
@@ -76,9 +75,9 @@ class MineSweeperLearner:
             print "Beginning play"
             print "Game board:"
             print game.state
-            #make first selection: 0,0
-            selectedX = 0
-            selectedY = 0
+            #make first selection in the middle. better than corner.
+            selectedX = self.dim/2
+            selectedY = self.dim/2
             game.selectCell((selectedX, selectedY))
             time.sleep(0.5)
             os.system("clear")
