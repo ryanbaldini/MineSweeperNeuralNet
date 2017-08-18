@@ -52,7 +52,7 @@ def playMinesweeper():
     os.system("clear")
     print "Welcome to Minesweeper, fucker."
     
-    dim = input("Enter dimension of game board: ")
+    dim = input("Enter dimension of game board (one number): ")
     if dim > 10:
         print "Nope. We're doing 10."
         dim = 10
