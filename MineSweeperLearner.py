@@ -31,6 +31,9 @@ class MineSweeperLearner:
             for j in range(gamesPerBatch):
                 # initiate game
                 game = MineSweeper(self.dim, int(0.2 * self.totalCells))
+                #pick top left corner on first selection
+                #remember: mines are not placed until after first selection
+                game.selectCell((0, 0))
                 while not game.gameOver:
                     # get data input from game state
                     Xnow = self.getPredictorsFromGameState(game.state)
@@ -71,9 +74,17 @@ class MineSweeperLearner:
             game = MineSweeper(self.dim, int(0.2 * self.totalCells))
             os.system("clear")
             print "Beginning play"
+            print "Game board:"
+            print game.state
+            #make first selection: 0,0
+            selectedX = 0
+            selectedY = 0
+            game.selectCell((selectedX, selectedY))
+            time.sleep(0.5)
+            os.system("clear")
+            #now the rest
             while not game.gameOver:
-                if np.sum(np.isnan(game.state)) < self.totalCells:
-                    print "Last selection: (" + str(selectedX+1) + "," + str(selectedY+1) + ")"
+                print "Last selection: (" + str(selectedX+1) + "," + str(selectedY+1) + ")"
                 print "Game board:"
                 print game.state
                 Xnow = self.getPredictorsFromGameState(game.state)
@@ -96,8 +107,6 @@ class MineSweeperLearner:
                 print "Victory!"
             else:
                 print "Game Over"
-            play = raw_input("Watch me play again? (y/n): ")
-            if play == "y":
-                play = True
-            else:
+            get = raw_input("Watch me play again? (y/n): ")
+            if get != "y":
                 play = False
