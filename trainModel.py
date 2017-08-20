@@ -27,11 +27,13 @@ elif toDo == 2:
 #get batch info
 gamesPerBatch = input("How many games per batch? ")
 nBatches = input("How many batches? ")
+nEpochsPerBatch = input("How many training epochs on each batch? ")
 
 #launch background process
 if toDo == 1:
-    os.system("nohup python trainModelBackground.py -o trainNew -m " + modelChoice + " -b " + str(nBatches) + " -g " + str(gamesPerBatch) + " >log/" + modelChoice + ".out &")
+    os.system("nohup python trainModelBackground.py -o trainNew -m " + modelChoice + " -b " + str(nBatches) + " -g " + str(gamesPerBatch) + " -e " + str(nEpochsPerBatch) + " >log/" + modelChoice + ".out &")
 elif toDo == 2:
-    os.system("nohup python trainModelBackground.py -o continueTraining -m " + modelChoice + " -b " + str(nBatches) + " -g " + str(gamesPerBatch) + " >log/" + modelChoice + ".out &")
+    os.system("nohup python trainModelBackground.py -o continueTraining -m " + modelChoice + " -b " + str(nBatches) + " -g " + str(gamesPerBatch) + " -e " + str(nEpochsPerBatch) + " >log/" + modelChoice + ".out &")
 
 print "Model training output is being written to log/" + modelChoice + ".out"
+print "Model will be saved every 100 batches to trainedModels/" + modelChoice + ".h5"

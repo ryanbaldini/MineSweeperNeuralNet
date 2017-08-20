@@ -4,7 +4,8 @@ import time
 import os
 
 class MineSweeperLearner:
-    def __init__(self, model, dim):
+    def __init__(self, name, model, dim):
+        self.name = name
         self.model = model
         self.dim = dim
         self.totalCells = dim * dim
@@ -21,7 +22,7 @@ class MineSweeperLearner:
             out[0][i + 2] = np.where(state == i, 1, 0)
         return out
 
-    def learnMineSweeper(self, gamesPerBatch, nBatches, verbose=True):
+    def learnMineSweeper(self, gamesPerBatch, nBatches, nEpochsPerBatch, verbose=True):
         for i in range(nBatches):
             X = np.zeros((1, 11, self.dim, self.dim))  # 11 channels: 1 for if has been revealed, 1 for is-on-board, 1 for each number
             X2 = np.zeros((1, 1, self.dim, self.dim))
@@ -64,7 +65,10 @@ class MineSweeperLearner:
             X2 = np.delete(X2, 0, 0)
             y = np.delete(y, 0, 0)
             # print y
-            self.model.fit([X, X2], y, epochs=1)
+            self.model.fit([X, X2], y, epochs=nEpochsPerBatch)
+            #save it every 100
+            if (i+1) % 100 == 0:
+                self.model.save("trainedModels/" + self.name + ".h5")
 
     def watchMePlay(self):
         np.set_printoptions(linewidth=200)
@@ -79,7 +83,7 @@ class MineSweeperLearner:
             selectedX = self.dim/2
             selectedY = self.dim/2
             game.selectCell((selectedX, selectedY))
-            time.sleep(0.5)
+            time.sleep(0.25)
             os.system("clear")
             #now the rest
             while not game.gameOver:
@@ -96,7 +100,7 @@ class MineSweeperLearner:
                 selectedX = int(selected / self.dim)
                 selectedY = selected % self.dim
                 game.selectCell((selectedX, selectedY))
-                time.sleep(0.5)
+                time.sleep(0.25)
                 os.system("clear")
             if np.sum(np.isnan(game.state)) < self.totalCells:
                 print "Last selection: (" + str(selectedX+1) + "," + str(selectedY+1) + ")"
