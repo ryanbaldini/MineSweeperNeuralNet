@@ -1,7 +1,7 @@
 # MineSweeperNeuralNet
 Teaching a neural network to play mine sweeper.
 
-Run watchMePlay.py and choose model6. Victory rate is >50% on a 10x10 board with 20 mines (hard).
+Run watchMePlay.py and choose model6. Victory rate is >50% on a 10x10 board with 20 mines (hard). You will need keras and theano libraries to watch.
 
 The goal of this project is to experiment with reinforcement learning, whereby general-purpose neural networks learn to do a task simply by doing it many times and getting some performance feedback. The model doesn’t know the rules of minesweeper, but it figures out how to play anyway. (The model here is a convolutional neural network.)
 
