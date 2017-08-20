@@ -11,8 +11,9 @@ def main(argv):
     modelChoice = ''
     nBatches = 1000
     gamesPerBatch = 100
+    epochsPerBatch = 1
     try:
-        opts, args = getopt.getopt(argv, "ho:m:b:g:", ["option=", "model=", "batches=", "gamesPerBatch="])
+        opts, args = getopt.getopt(argv, "ho:m:b:g:e:", ["option=", "model=", "batches=", "gamesPerBatch=", "epochsPerBatch="])
     except getopt.GetoptError:
         print 'trainModelBackground.py -o <option> -m <model>'
         sys.exit(2)
@@ -28,17 +29,19 @@ def main(argv):
             nBatches = int(arg)
         elif opt in ("-g", "--gamesPerBatch"):
             gamesPerBatch = int(arg)
+        elif opt in ("-e", "--epochsPerBatch"):
+            epochsPerBatch = int(arg)
 
     if option == "trainNew":
-        modelSource = imp.load_source(modelChoice, "modelCode/" + modelChoice + ".py")
+        modelSource = imp.load_source("modelCode/" + modelChoice + ".py")
         model = modelSource.model
         dim = modelSource.dim
     elif option == "continueTraining":
         model = load_model("trainedModels/" + modelChoice + ".h5")
         dim = model.get_config()['layers'][0]['config']['batch_input_shape'][2]  # pulled from keras config
 
-    learner = MineSweeperLearner(model, dim)
-    learner.learnMineSweeper(gamesPerBatch, nBatches, verbose=True)
+    learner = MineSweeperLearner(modelChoice, model, dim)
+    learner.learnMineSweeper(gamesPerBatch, nBatches, epochsPerBatch, verbose=True)
 
     learner.model.save("trainedModels/" + modelChoice + ".h5")
 
