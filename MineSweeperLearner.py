@@ -13,38 +13,40 @@ class MineSweeperLearner:
 
     # ultimately want to put this in the model so each can extract its own shit
     def getPredictorsFromGameState(self, state):
-        out = np.zeros((1, 11, self.dim1, self.dim2))
+        out = np.zeros((11, self.dim1, self.dim2))
         # channel 0: cell is still available to be clicked on
-        out[0][0] = np.where(np.isnan(state), 0, 1)
+        out[0] = np.where(np.isnan(state), 0, 1)
         # channel 1: cell is on game board (useful for detecting edges when conv does 0 padding)
-        out[0][1] = np.ones((self.dim1, self.dim2))
+        out[1] = np.ones((self.dim1, self.dim2))
         # the numeric channels: one layer each for 0 to 8 neighbors; one-hot encoding
         for i in range(0, 9):
-            out[0][i + 2] = np.where(state == i, 1, 0)
+            out[i + 2] = np.where(state == i, 1, 0)
         return out
 
-    def learnMineSweeper(self, gamesPerBatch, nBatches, nEpochsPerBatch, verbose=True):
+    def learnMineSweeper(self, nSamples, nBatches, nEpochsPerBatch, verbose=True):
+        X = np.zeros((nSamples, 11, self.dim1, self.dim2))  # 11 channels: 1 for if has been revealed, 1 for is-on-board, 1 for each number
+        X2 = np.zeros((nSamples, 1, self.dim1, self.dim2))
+        y = np.zeros((nSamples, 1, self.dim1, self.dim2))
         for i in range(nBatches):
-            X = np.zeros((1, 11, self.dim1, self.dim2))  # 11 channels: 1 for if has been revealed, 1 for is-on-board, 1 for each number
-            X2 = np.zeros((1, 1, self.dim1, self.dim2))
-            y = np.zeros((1, 1, self.dim1, self.dim2))
-            meanCellsRevealed = 0
-            propGamesWon = 0
-            for j in range(gamesPerBatch):
+            cellsRevealed = 0
+            gamesPlayed = 0
+            gamesWon = 0
+            samplesTaken = 0
+            while samplesTaken < nSamples:
                 # initiate game
                 game = MineSweeper()
                 #pick middle on first selection. better than corner.
                 game.selectCell((self.dim1/2, self.dim2/2))
-                while not game.gameOver:
+                while not (game.gameOver or samplesTaken == nSamples):
                     # get data input from game state
                     Xnow = self.getPredictorsFromGameState(game.state)
-                    X = np.append(X, Xnow, 0)
-                    X2now = np.array([[np.where(Xnow[0][0] == 0, 1, 0)]])
-                    X2 = np.append(X2, X2now, 0)
+                    X[samplesTaken] = Xnow
+                    X2now = np.array([np.where(Xnow[0] == 0, 1, 0)])
+                    X2[samplesTaken] = X2now
                     # make probability predictions
-                    out = self.model.predict([Xnow, X2now])
+                    out = self.model.predict([np.array([Xnow]), np.array([X2now])])
                     # choose best remaining cell
-                    orderedProbs = np.argsort(out[0][0]+Xnow[0][0], axis=None) #add Xnow[0] so that already selected cells aren't chosen
+                    orderedProbs = np.argsort(out[0][0]+Xnow[0], axis=None) #add Xnow[0] so that already selected cells aren't chosen
                     selected = orderedProbs[0]
                     selected1 = int(selected / self.dim2)
                     selected2 = selected % self.dim2
@@ -52,20 +54,20 @@ class MineSweeperLearner:
                     # find truth
                     truth = out
                     truth[0, 0, selected1, selected2] = game.mines[selected1, selected2]
-                    y = np.append(y, truth, 0)
-                meanCellsRevealed += self.totalCells - np.sum(np.isnan(game.state))
-                if game.victory:
-                    propGamesWon += 1
-            meanCellsRevealed = float(meanCellsRevealed) / gamesPerBatch
-            propGamesWon = float(propGamesWon) / gamesPerBatch
+                    y[samplesTaken] = truth[0]
+                    samplesTaken += 1
+                if game.gameOver:
+                    gamesPlayed += 1
+                    cellsRevealed += self.totalCells - np.sum(np.isnan(game.state))
+                    if game.victory:
+                        gamesWon += 1
+            meanCellsRevealed = float(cellsRevealed) / gamesPlayed
+            propGamesWon = float(gamesWon) / gamesPlayed
             if verbose:
+                print "Games played, batch " + str(i) + ": " + str(gamesPlayed)
                 print "Mean cells revealed, batch " + str(i) + ": " + str(meanCellsRevealed)
                 print "Proportion of games won, batch " + str(i) + ": " + str(propGamesWon)
-            # now train on data
-            X = np.delete(X, 0, 0)
-            X2 = np.delete(X2, 0, 0)
-            y = np.delete(y, 0, 0)
-            # print y
+            #train
             self.model.fit([X, X2], y, epochs=nEpochsPerBatch)
             #save it every 100
             if (i+1) % 100 == 0:
@@ -84,7 +86,7 @@ class MineSweeperLearner:
             selected1 = self.dim1/2
             selected2 = self.dim2/2
             game.selectCell((selected1, selected2))
-            time.sleep(0.25)
+            time.sleep(0.1)
             os.system("clear")
             #now the rest
             while not game.gameOver:
@@ -92,16 +94,16 @@ class MineSweeperLearner:
                 print "Game board:"
                 print game.state
                 Xnow = self.getPredictorsFromGameState(game.state)
-                X2now = np.array([[np.where(Xnow[0][0] == 0, 1, 0)]])
+                X2now = np.array([np.where(Xnow[0] == 0, 1, 0)])
                 # make probability predictions
-                out = self.model.predict([Xnow, X2now])
+                out = self.model.predict([np.array([Xnow]), np.array([X2now])])
                 # choose best remaining cell
-                orderedProbs = np.argsort(out[0][0] + Xnow[0][0], axis=None)  # add Xnow[0] so that already selected cells aren't chosen
+                orderedProbs = np.argsort(out[0][0] + Xnow[0], axis=None)  # add Xnow[0] so that already selected cells aren't chosen
                 selected = orderedProbs[0]
                 selected1 = int(selected / self.dim2)
                 selected2 = selected % self.dim2
                 game.selectCell((selected1, selected2))
-                time.sleep(0.25)
+                time.sleep(0.1)
                 os.system("clear")
             if np.sum(np.isnan(game.state)) < self.totalCells:
                 print "Last selection: (" + str(selected1+1) + "," + str(selected2+1) + ")"

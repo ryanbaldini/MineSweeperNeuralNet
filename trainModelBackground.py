@@ -10,10 +10,10 @@ def main(argv):
     option = ''
     modelChoice = ''
     nBatches = 1000
-    gamesPerBatch = 100
+    nSamples = 1000
     epochsPerBatch = 1
     try:
-        opts, args = getopt.getopt(argv, "ho:m:b:g:e:", ["option=", "model=", "batches=", "gamesPerBatch=", "epochsPerBatch="])
+        opts, args = getopt.getopt(argv, "ho:m:b:s:e:", ["option=", "model=", "batches=", "nSamples=", "epochsPerBatch="])
     except getopt.GetoptError:
         print 'trainModelBackground.py -o <option> -m <model>'
         sys.exit(2)
@@ -27,8 +27,8 @@ def main(argv):
             modelChoice = arg
         elif opt in ("-b", "--batches"):
             nBatches = int(arg)
-        elif opt in ("-g", "--gamesPerBatch"):
-            gamesPerBatch = int(arg)
+        elif opt in ("-s", "--nSamples"):
+            nSamples = int(arg)
         elif opt in ("-e", "--epochsPerBatch"):
             epochsPerBatch = int(arg)
 
@@ -39,7 +39,7 @@ def main(argv):
         model = load_model("trainedModels/" + modelChoice + ".h5")
 
     learner = MineSweeperLearner(modelChoice, model)
-    learner.learnMineSweeper(gamesPerBatch, nBatches, epochsPerBatch, verbose=True)
+    learner.learnMineSweeper(nSamples, nBatches, epochsPerBatch, verbose=True)
 
     learner.model.save("trainedModels/" + modelChoice + ".h5")
 
