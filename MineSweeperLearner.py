@@ -68,7 +68,7 @@ class MineSweeperLearner:
                 print "Mean cells revealed, batch " + str(i) + ": " + str(meanCellsRevealed)
                 print "Proportion of games won, batch " + str(i) + ": " + str(propGamesWon)
             #train
-            self.model.fit([X, X2], y, epochs=nEpochsPerBatch)
+            self.model.fit([X, X2], y, batch_size=nSamples, epochs=nEpochsPerBatch)
             #save it every 100
             if (i+1) % 100 == 0:
                 self.model.save("trainedModels/" + self.name + ".h5")
