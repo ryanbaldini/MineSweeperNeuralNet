@@ -2,14 +2,15 @@ import numpy as np
 
 # the "game board", with state
 class MineSweeper:
-    def __init__(self, dim, nMines):
+    def __init__(self):
         # params
-        self.dim = dim
-        self.totalCells = dim*dim
-        self.nMines = nMines
-        self.mines = np.zeros([dim, dim])
-        self.neighbors = np.zeros([dim, dim])
-        self.state = np.zeros([dim, dim])
+        self.dim1 = 16
+        self.dim2 = 30
+        self.totalCells = self.dim1 * self.dim2
+        self.nMines = 99
+        self.mines = np.zeros([self.dim1, self.dim2])
+        self.neighbors = np.zeros([self.dim1, self.dim2])
+        self.state = np.zeros([self.dim1, self.dim2])
         self.state.fill(np.nan)
         self.initialized = False
         self.gameOver = False
@@ -21,21 +22,21 @@ class MineSweeper:
         # so that first selection is always a 0
         # weird, yes, but that's how the original minesweeper worked
         availableCells = range(self.totalCells)
-        selected = coordinates[0]*self.dim + coordinates[1]
-        offLimits = np.array([selected-self.dim-1, selected-self.dim, selected-self.dim+1, selected-1, selected, selected+1, selected+self.dim-1, selected+self.dim, selected+self.dim+1])    #out of bounds is ok
+        selected = coordinates[0]*self.dim2 + coordinates[1]
+        offLimits = np.array([selected-self.dim2-1, selected-self.dim2, selected-self.dim2+1, selected-1, selected, selected+1, selected+self.dim2-1, selected+self.dim2, selected+self.dim2+1])    #out of bounds is ok
         availableCells = np.setdiff1d(availableCells, offLimits)
         self.nMines = np.minimum(self.nMines, len(availableCells))  #in case there are fewer remaining cells than mines to place
-        minesFlattened = np.zeros([self.dim*self.dim])
+        minesFlattened = np.zeros([self.totalCells])
         minesFlattened[np.random.choice(availableCells, self.nMines, replace=False)] = 1
-        self.mines = minesFlattened.reshape([self.dim, self.dim])
+        self.mines = minesFlattened.reshape([self.dim1, self.dim2])
         # set up neighbors
-        for i in range(self.dim):
-            for j in range(self.dim):
+        for i in range(self.dim1):
+            for j in range(self.dim2):
                 nNeighbors = 0
                 for k in range(-1, 2):
-                    if i + k >= 0 and i + k < self.dim:
+                    if i + k >= 0 and i + k < self.dim1:
                         for l in range(-1, 2):
-                            if j + l >= 0 and j + l < self.dim and (k != 0 or l != 0):
+                            if j + l >= 0 and j + l < self.dim2 and (k != 0 or l != 0):
                                 nNeighbors += self.mines[i + k, j + l]
                 self.neighbors[i, j] = nNeighbors
         #done
@@ -47,9 +48,9 @@ class MineSweeper:
         self.state[x, y] = self.neighbors[x, y]
         if self.state[x, y] == 0:
             for i in range(-1, 2):
-                if x + i >= 0 and x + i < self.dim:
+                if x + i >= 0 and x + i < self.dim1:
                     for j in range(-1, 2):
-                        if y + j >= 0 and y + j < self.dim:
+                        if y + j >= 0 and y + j < self.dim2:
                             if np.isnan(self.state[x + i, y + j]):
                                 self.clearEmptyCell((x + i, y + j))
 

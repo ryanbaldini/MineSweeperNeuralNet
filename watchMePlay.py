@@ -14,7 +14,6 @@ modelChoice = input(prompt)
 modelChoice = preTrainedModels[modelChoice - 1]
 
 model = load_model("trainedModels/" + modelChoice + ".h5")
-dim = model.get_config()['layers'][0]['config']['batch_input_shape'][2]  # pulled from keras config
 
-learner = MineSweeperLearner(modelChoice, model, dim)
+learner = MineSweeperLearner(modelChoice, model)
 learner.watchMePlay()

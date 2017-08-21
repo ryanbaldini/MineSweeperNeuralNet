@@ -8,14 +8,7 @@ def playMinesweeper():
 
     os.system("clear")
     print "Welcome to Minesweeper, fucker."
-    
-    dim = input("Enter dimension of game board (one number): ")
-    if dim > 10:
-        print "Don't waste my time. We're doing 10."
-        dim = 10
-    
-    nMines = int(0.2*dim*dim)
-        
+
     toss = raw_input("Enter your name: ")
     
     #out of bounds messages
@@ -28,15 +21,15 @@ def playMinesweeper():
     playing = True
     while playing:
         message = "Okay, 'Bitch', let's play."
-        game = MineSweeper(dim, nMines)
+        game = MineSweeper()
         while not game.gameOver:
             os.system("clear")
             print message
-            print "There are " + str(nMines) + " total mines."
+            print "There are 99 total mines."
             print game.state
             message = "You're still alive, somehow."
             coordinates = input("Enter coordinates: ")
-            if isinstance(coordinates, tuple) and coordinates[0] > 0 and coordinates[0] <= dim and coordinates[1] >0 and coordinates[1] <= dim:
+            if isinstance(coordinates, tuple) and coordinates[0] > 0 and coordinates[0] <= game.dim1 and coordinates[1] >0 and coordinates[1] <= game.dim2:
                 coordinates = (coordinates[0]-1, coordinates[1]-1)
                 game.selectCell(coordinates)
             else:
