@@ -1,4 +1,5 @@
 import numpy as np
+cimport numpy as np
 from MineSweeper import MineSweeper
 import time
 import os
@@ -19,11 +20,14 @@ class MineSweeperLearner:
         # channel 1: cell is on game board (useful for detecting edges when conv does 0 padding)
         out[0][1] = np.ones((self.dim1, self.dim2))
         # the numeric channels: one layer each for 0 to 8 neighbors; one-hot encoding
+        cdef int i
         for i in range(0, 9):
             out[0][i + 2] = np.where(state == i, 1, 0)
         return out
 
     def learnMineSweeper(self, gamesPerBatch, nBatches, nEpochsPerBatch, verbose=True):
+        cdef int i
+        cdef int j
         for i in range(nBatches):
             X = np.zeros((1, 11, self.dim1, self.dim2))  # 11 channels: 1 for if has been revealed, 1 for is-on-board, 1 for each number
             X2 = np.zeros((1, 1, self.dim1, self.dim2))

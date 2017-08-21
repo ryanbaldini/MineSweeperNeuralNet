@@ -1,4 +1,5 @@
 import numpy as np
+cimport numpy as np
 
 # the "game board", with state
 class MineSweeper:
@@ -30,6 +31,10 @@ class MineSweeper:
         minesFlattened[np.random.choice(availableCells, self.nMines, replace=False)] = 1
         self.mines = minesFlattened.reshape([self.dim1, self.dim2])
         # set up neighbors
+        cdef int i
+        cdef int j
+        cdef int k
+        cdef int l
         for i in range(self.dim1):
             for j in range(self.dim2):
                 nNeighbors = 0
@@ -46,6 +51,8 @@ class MineSweeper:
         x = coordinates[0]
         y = coordinates[1]
         self.state[x, y] = self.neighbors[x, y]
+        cdef int i
+        cdef int j
         if self.state[x, y] == 0:
             for i in range(-1, 2):
                 if x + i >= 0 and x + i < self.dim1:
