@@ -2,9 +2,19 @@ import numpy as np
 cimport numpy as np
 
 # the "game board", with state
-class MineSweeper:
+cdef class MineSweeper:
+    cdef int dim1
+    cdef int dim2
+    cdef int totalCells
+    cdef int nMines
+    cdef int initialized
+    cdef int gameOver
+    cdef int victory
+    cdef np.ndarray mines
+    cdef np.ndarray neighbors
+    cdef np.ndarray state
+
     def __init__(self):
-        # params
         self.dim1 = 16
         self.dim2 = 30
         self.totalCells = self.dim1 * self.dim2
@@ -13,9 +23,9 @@ class MineSweeper:
         self.neighbors = np.zeros([self.dim1, self.dim2])
         self.state = np.zeros([self.dim1, self.dim2])
         self.state.fill(np.nan)
-        self.initialized = False
-        self.gameOver = False
-        self.victory = False
+        self.initialized = 0
+        self.gameOver = 0
+        self.victory = 0
 
     def initialize(self, coordinates):    #not run until after first selection!
         # set up mines
@@ -35,6 +45,7 @@ class MineSweeper:
         cdef int j
         cdef int k
         cdef int l
+        cdef int nNeighbors
         for i in range(self.dim1):
             for j in range(self.dim2):
                 nNeighbors = 0
@@ -45,9 +56,11 @@ class MineSweeper:
                                 nNeighbors += self.mines[i + k, j + l]
                 self.neighbors[i, j] = nNeighbors
         #done
-        self.initialized = True
+        self.initialized = 1
 
     def clearEmptyCell(self, coordinates):
+        cdef int x
+        cdef int y
         x = coordinates[0]
         y = coordinates[1]
         self.state[x, y] = self.neighbors[x, y]
@@ -63,12 +76,12 @@ class MineSweeper:
 
     def selectCell(self, coordinates):
         if self.mines[coordinates[0], coordinates[1]] > 0:  #condition always fails on first selection
-            self.gameOver = True
-            self.victory = False
+            self.gameOver = 1
+            self.victory = 0
         else:
             if not self.initialized:    #runs after first selection
                 self.initialize(coordinates)
             self.clearEmptyCell(coordinates)
             if np.sum(np.isnan(self.state)) == self.nMines:
-                self.gameOver = True
-                self.victory = True
+                self.gameOver = 1
+                self.victory = 1
