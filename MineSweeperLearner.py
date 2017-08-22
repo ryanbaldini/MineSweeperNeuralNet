@@ -45,9 +45,9 @@ class MineSweeperLearner:
                     X2[samplesTaken] = X2now
                     # make probability predictions
                     out = self.model.predict([np.array([Xnow]), np.array([X2now])])
-                    # choose best remaining cell
-                    orderedProbs = np.argsort(out[0][0]+Xnow[0], axis=None) #add Xnow[0] so that already selected cells aren't chosen
-                    selected = orderedProbs[0]
+                    # choose cell probabilistically
+                    outFlattened = out[0][0].flatten()
+                    selected = np.random.choice(self.totalCells, 1, False, outFlattened/np.sum(outFlattened))
                     selected1 = int(selected / self.dim2)
                     selected2 = selected % self.dim2
                     game.selectCell((selected1, selected2))
