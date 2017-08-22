@@ -3,8 +3,8 @@ from keras.layers import Input
 from keras.layers.convolutional import Conv2D
 from keras.layers.merge import Multiply
 
-dim1 = 16
-dim2 = 30
+dim1 = 10
+dim2 = 10
 inputShape = (11,dim1,dim2)   #11 channels
 
 in1 = Input(shape=inputShape)

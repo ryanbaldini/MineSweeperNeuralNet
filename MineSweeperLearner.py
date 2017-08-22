@@ -7,8 +7,8 @@ class MineSweeperLearner:
     def __init__(self, name, model):
         self.name = name
         self.model = model
-        self.dim1 = 16
-        self.dim2 = 30
+        self.dim1 = 10
+        self.dim2 = 10
         self.totalCells = self.dim1*self.dim2
 
     # ultimately want to put this in the model so each can extract its own shit
@@ -99,6 +99,8 @@ class MineSweeperLearner:
                 out = self.model.predict([np.array([Xnow]), np.array([X2now])])
                 # choose best remaining cell
                 orderedProbs = np.argsort(out[0][0] + Xnow[0], axis=None)  # add Xnow[0] so that already selected cells aren't chosen
+                print out[0][0]
+                toss = raw_input("press any key to continue")
                 selected = orderedProbs[0]
                 selected1 = int(selected / self.dim2)
                 selected2 = selected % self.dim2
