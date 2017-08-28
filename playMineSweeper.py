@@ -2,7 +2,7 @@ import numpy as np
 import os
 from MineSweeper import MineSweeper
 
-np.set_printoptions(linewidth = 200)
+np.set_printoptions(linewidth = 1000, precision = 3, suppress = True)
 
 def playMinesweeper():
 

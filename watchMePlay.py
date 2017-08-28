@@ -3,6 +3,8 @@ from MineSweeperLearner import MineSweeperLearner
 from keras.models import load_model
 import numpy as np
 
+np.set_printoptions(linewidth = 1000, precision=3, suppress=True)
+
 #Prompt user to specify the model they want to watch play
 preTrainedModels = os.listdir("trainedModels")
 preTrainedModels = [i.replace(".h5","") for i in preTrainedModels if i[0] != '.']

@@ -13,6 +13,7 @@ conv = Conv2D(64, (3,3), padding='same', data_format = 'channels_first', activat
 conv = Conv2D(64, (3,3), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(conv)
 conv = Conv2D(64, (3,3), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(conv)
 conv = Conv2D(64, (3,3), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(conv)
+conv = Conv2D(64, (3,3), padding='same', data_format = 'channels_first', activation = 'relu', use_bias = True)(conv)
 conv = Conv2D(1, (1,1), padding='same', data_format = 'channels_first', activation = 'sigmoid', use_bias = True)(conv)
 out = Multiply()([conv,in2])
 model = Model(inputs=[in1,in2], outputs=out)
