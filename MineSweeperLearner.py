@@ -14,7 +14,7 @@ class MineSweeperLearner:
     # ultimately want to put this in the model so each can extract its own shit
     def getPredictorsFromGameState(self, state):
         out = np.zeros((11, self.dim1, self.dim2))
-        # channel 0: cell is still available to be clicked on
+        # channel 0: cell number "holds contains information", i.e. has been revealed
         out[0] = np.where(np.isnan(state), 0, 1)
         # channel 1: cell is on game board (useful for detecting edges when conv does 0 padding)
         out[1] = np.ones((self.dim1, self.dim2))
