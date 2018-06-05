@@ -15,11 +15,11 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv, "ho:m:b:s:e:", ["option=", "model=", "batches=", "nSamples=", "epochsPerBatch="])
     except getopt.GetoptError:
-        print 'trainModelBackground.py -o <option> -m <model>'
+        print('trainModelBackground.py -o <option> -m <model>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print 'trainModelBackground.py -o <option> -m <model>'
+            print('trainModelBackground.py -o <option> -m <model>')
             sys.exit()
         elif opt in ("-o", "--option"):
             option = arg

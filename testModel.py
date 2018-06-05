@@ -10,15 +10,15 @@ preTrainedModels = np.sort(preTrainedModels)
 prompt = "Choose which model to continue training (from 'trainedModels' folder): \n"
 for i in range(len(preTrainedModels)):
     prompt += str(i+1) +  ". " + preTrainedModels[i] + '\n'
-modelChoice = input(prompt)
+modelChoice = int(input(prompt))
 modelChoice = preTrainedModels[modelChoice-1]
 
-print "Loading model..."
+print("Loading model...")
 model = load_model("trainedModels/" + modelChoice + ".h5")
 learner = MineSweeperLearner(modelChoice, model)
 
 #get batch info
-nGames = input("How many games to test on? ")
+nGames = int(input("How many games to test on? "))
 
 #go
 learner.testMe(nGames)

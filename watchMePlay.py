@@ -12,7 +12,7 @@ preTrainedModels = np.sort(preTrainedModels)
 prompt = "Which model do you want to watch play? \n"
 for i in range(len(preTrainedModels)):
     prompt += str(i + 1) + ". " + preTrainedModels[i] + '\n'
-modelChoice = input(prompt)
+modelChoice = int(input(prompt))
 modelChoice = preTrainedModels[modelChoice - 1]
 
 model = load_model("trainedModels/" + modelChoice + ".h5")

@@ -65,9 +65,9 @@ class MineSweeperLearner:
                 meanCellsRevealed = float(cellsRevealed) / gamesPlayed
                 propGamesWon = float(gamesWon) / gamesPlayed
             if verbose:
-                print "Games played, batch " + str(i) + ": " + str(gamesPlayed)
-                print "Mean cells revealed, batch " + str(i) + ": " + str(meanCellsRevealed)
-                print "Proportion of games won, batch " + str(i) + ": " + str(propGamesWon)
+                print("Games played, batch " + str(i) + ": " + str(gamesPlayed))
+                print("Mean cells revealed, batch " + str(i) + ": " + str(meanCellsRevealed))
+                print("Proportion of games won, batch " + str(i) + ": " + str(propGamesWon))
             #train
             self.model.fit([X, X2], y, batch_size=nSamples, epochs=nEpochsPerBatch)
             #save it every 100
@@ -79,11 +79,11 @@ class MineSweeperLearner:
         gamesWon = 0
         for i in range(nGames):
             if (i % 10) == 0:
-                print "Playing game " + str(i+1) + "..."
+                print("Playing game " + str(i+1) + "...")
             # initiate game
             game = MineSweeper()
             # pick middle on first selection. better than corner.
-            game.selectCell((self.dim1 / 2, self.dim2 / 2))
+            game.selectCell((int(self.dim1 / 2), int(self.dim2 / 2)))
             while not game.gameOver:
                 # get data input from game state
                 Xnow = self.getPredictorsFromGameState(game.state)
@@ -101,8 +101,8 @@ class MineSweeperLearner:
                 gamesWon += 1
         meanCellsRevealed = float(cellsRevealed) / nGames
         propGamesWon = float(gamesWon) / nGames
-        print "Proportion of games won, batch " + str(i) + ": " + str(propGamesWon)
-        print "Mean cells revealed, batch " + str(i) + ": " + str(meanCellsRevealed)
+        print("Proportion of games won, batch " + str(i) + ": " + str(propGamesWon))
+        print("Mean cells revealed, batch " + str(i) + ": " + str(meanCellsRevealed))
 
 
     def watchMePlay(self):
@@ -110,22 +110,22 @@ class MineSweeperLearner:
         while play:
             game = MineSweeper()
             os.system("clear")
-            print "Beginning play"
-            print "Game board:"
-            print game.state
+            print("Beginning play")
+            print("Game board:")
+            print(game.state)
             #make first selection in the middle. better than corner.
-            selected1 = self.dim1/2
-            selected2 = self.dim2/2
+            selected1 = int(self.dim1/2)
+            selected2 = int(self.dim2/2)
             game.selectCell((selected1, selected2))
             time.sleep(0.1)
             os.system("clear")
             #now the rest
             while not game.gameOver:
-                print "Last selection: (" + str(selected1+1) + "," + str(selected2+1) + ")"
+                print("Last selection: (" + str(selected1+1) + "," + str(selected2+1) + ")")
                 if 'out' in locals():
-                    print "Confidence: " + str(np.round(100*(1-np.amin(out[0][0] + Xnow[0])),2)) + "%"
-                print "Game board:"
-                print game.state
+                    print("Confidence: " + str(np.round(100*(1-np.amin(out[0][0] + Xnow[0])),2)) + "%")
+                print("Game board:")
+                print(game.state)
                 Xnow = self.getPredictorsFromGameState(game.state)
                 X2now = np.array([np.where(Xnow[0] == 0, 1, 0)])
                 # make probability predictions
@@ -138,14 +138,14 @@ class MineSweeperLearner:
                 game.selectCell((selected1, selected2))
                 time.sleep(0.1)
                 os.system("clear")
-            print "Last selection: (" + str(selected1+1) + "," + str(selected2+1) + ")"
-            print "Confidence: " + str(np.round(100 * (1 - np.amin(out[0][0] + Xnow[0])), 2)) + "%"
-            print "Game board:"
-            print game.state
+            print("Last selection: (" + str(selected1+1) + "," + str(selected2+1) + ")")
+            print("Confidence: " + str(np.round(100 * (1 - np.amin(out[0][0] + Xnow[0])), 2)) + "%")
+            print("Game board:")
+            print(game.state)
             if game.victory:
-                print "Victory!"
+                print("Victory!")
             else:
-                print "Game Over"
-            get = raw_input("Watch me play again? (y/n): ")
+                print("Game Over")
+            get = input("Watch me play again? (y/n): ")
             if get != "y":
                 play = False
