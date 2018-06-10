@@ -10,7 +10,8 @@ models = np.sort(models)
 preTrainedModels = os.listdir("trainedModels")
 preTrainedModels = [i.replace(".h5","") for i in preTrainedModels if i[0] != '.']
 preTrainedModels = np.sort(preTrainedModels)
-toDo = input("What do you want to do? \n1. Train a new model from scratch \n2. Keep training a pre-trained model\n")
+toDo = int(input("What do you want to do? \n1. Train a new model from scratch \n2. Keep training a pre-trained model\n"))
+modelChoice = ''
 if toDo == 1:
     prompt = "Choose which model to train (from 'modelCode' folder): \n"
     for i in range(len(models)):
@@ -21,13 +22,17 @@ elif toDo == 2:
     prompt = "Choose which model to continue training (from 'trainedModels' folder): \n"
     for i in range(len(preTrainedModels)):
         prompt += str(i+1) +  ". " + preTrainedModels[i] + '\n'
-    modelChoice = int(input(prompt))
-    modelChoice = preTrainedModels[modelChoice-1]
-
+    modelChoiceInd = int(input(prompt))
+    modelChoice = preTrainedModels[modelChoiceInd-1]
 #get batch info
 samples = int(input("How many samples per batch? "))
 nBatches = int(input("How many batches? "))
 nEpochsPerBatch = int(input("How many training epochs on each batch? "))
+
+print(modelChoice)
+print(nBatches)
+print(samples)
+print(nEpochsPerBatch)
 
 #launch background process
 if toDo == 1:
