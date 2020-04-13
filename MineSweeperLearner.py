@@ -117,7 +117,7 @@ class MineSweeperLearner:
             selected1 = int(self.dim1/2)
             selected2 = int(self.dim2/2)
             game.selectCell((selected1, selected2))
-            time.sleep(0.1)
+            time.sleep(0.05)
             os.system("clear")
             #now the rest
             while not game.gameOver:
@@ -136,7 +136,7 @@ class MineSweeperLearner:
                 selected1 = int(selected / self.dim2)
                 selected2 = selected % self.dim2
                 game.selectCell((selected1, selected2))
-                time.sleep(0.1)
+                time.sleep(0.05)
                 os.system("clear")
             print("Last selection: (" + str(selected1+1) + "," + str(selected2+1) + ")")
             print("Confidence: " + str(np.round(100 * (1 - np.amin(out[0][0] + Xnow[0])), 2)) + "%")
