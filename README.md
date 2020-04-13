@@ -1,7 +1,9 @@
 # MineSweeperNeuralNet
 Teaching a neural network to play mine sweeper.
 
-Run watchMePlay.py and choose model7. Victory rate is currently around 42% on "Expert": a 16x30 board with 99 mines. See the requirements.txt file if you're having trouble.
+See the powerpoint presentation for an explanation of the model structure.
+
+Run watchMePlay.py and choose model7 to see it in action. Victory rate is currently around 42% on "Expert": a 16x30 board with 99 mines. See the requirements.txt file if you're having trouble.
 
 To train a new model or continue training a saved one, run trainModel.py.
 
